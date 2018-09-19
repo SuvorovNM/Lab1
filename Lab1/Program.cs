@@ -77,19 +77,7 @@ namespace Lab1
                 //telem - type of the parameter
                 Type telem = new Type();
                 //if there are only 2 words in variables:
-                if (variables[0] != "ref" && variables[0] != "out")
-                {
-                    p = param.param_val;
-                    telem = CaseOfTypes(variables, telem, 0);
-                }
-                //if there are 3 words in variables:
-                else
-                {
-                    telem = CaseOfTypes(variables, telem, 1);
-                    if (variables[0] == "ref")
-                        p = param.param_ref;
-                    else p = param.param_out;
-                }
+                p = ExecuteArgument(variables, ref telem);
                 //list - unidirectional list with 3 fields: way of transmission,type, next_element
                 list = new Onewaylist(telem, p);
                 //beg - link to list, to go through it and add elements
@@ -103,19 +91,7 @@ namespace Lab1
                     //variables - array of [way of transmission,type, name] or [type, name]
                     variables = par[i].Split(' ');
                     //if there are only 2 words in variables:
-                    if (variables[0] != "ref" && variables[0] != "out")
-                    {
-                        p = param.param_val;
-                        telem = CaseOfTypes(variables, telem, 0);
-                    }
-                    //if there are 3 words in variables:
-                    else
-                    {
-                        telem = CaseOfTypes(variables, telem, 1);
-                        if (variables[0] == "ref")
-                            p = param.param_ref;
-                        else p = param.param_out;
-                    }
+                    p = ExecuteArgument(variables, ref telem);                    
                     //Adding element to the list and putting a pointer on the next element
                     beg.next = new Onewaylist(telem, p);
                     beg = beg.next;
@@ -131,6 +107,26 @@ namespace Lab1
             }
             //If some elements already exist in the tree:
             else tree.Addtree(met_t);
+        }
+
+        private static param ExecuteArgument(string[] variables, ref Type telem)
+        {
+            param p;
+            if (variables[0] != "ref" && variables[0] != "out")
+            {
+                p = param.param_val;
+                telem = CaseOfTypes(variables, telem, 0);
+            }
+            //if there are 3 words in variables:
+            else
+            {
+                telem = CaseOfTypes(variables, telem, 1);
+                if (variables[0] == "ref")
+                    p = param.param_ref;
+                else p = param.param_out;
+            }
+
+            return p;
         }
 
         private static Type CaseOfTypes(string[] variables, Type telem, int i)
